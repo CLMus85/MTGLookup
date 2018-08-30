@@ -22,12 +22,6 @@ def giveme(message, cardname):
     message.reply('{}'.format(card_join))
 
 
-@listen_to('Can someone help me?')
-def help(message):
-    # Message is replied to the sender (prefixed with @user)
-    message.reply('Death awaits us all')
-
-
 def main():
     bot = Bot()
     bot.run()
