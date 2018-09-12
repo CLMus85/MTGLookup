@@ -35,10 +35,10 @@ def giveme(message, cardname):
     message.reply('{}'.format(card_join))
 
 
-@listen_to('Can someone help me?')
-def help(message):
-    # Message is replied to the sender (prefixed with @user)
-    message.reply('Yes, I can!')
+#@listen_to('Can someone help me?')
+#def help(message):
+#    # Message is replied to the sender (prefixed with @user)
+#    message.reply('Yes, I can!')
 
 
 def main():
