@@ -7,7 +7,7 @@ from requests import get
 from time import sleep
 
 
-@respond_to('JEO'), re.IGNORECASE
+@respond_to('JEO', re.IGNORECASE)
 def thegame(message):
     with open('j.json') as data_file:  # https://drive.google.com/file/d/0BwT5wj_P7BKXb2hfM3d2RHU1ckE/view for the json file
         data = json.loads(data_file.read())
