@@ -25,7 +25,7 @@ def griselbrand(message):
                     " I have come here to chew bubblegum and kick ass… And I’m all out of bubblegum.",
                     " Do you feel lucky, punk?", " If it bleeds, we can kill it.", " Consider that a divorce!",
                     " Yippee ki yay, motherfucker!"]
-    quote = gbear_quotes[random.choice(gbear_quotes)]
+    quote = random.choice(gbear_quotes)
     message.reply(url + quote)
 
 
@@ -56,7 +56,7 @@ def magicball(message):
                "Reply hazy, try again",
                "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.",
                "Don't count on it.", "No.", "My sources say no", "Outlook not so good.", "Very doubtful."]
-    answer = answers[random.choice(answers)]
+    answer = random.choice(answers)
     message.reply(answer)
 
 
