@@ -13,7 +13,7 @@ def griselbrand(message):
                   "https://cdnb.artstation.com/p/assets/images/images/008/979/889/large/tomas-vareika-griselbrand-comp.jpg?1516447685",
                   "http://www.mtgcanada.com/wp-content/themes/jubini/framework/modules/timthumb/timthumb.php?src=http%3A%2F%2Fwww.mtgcanada.com%2Fwp-content%2Fuploads%2F2015%2F09%2Findex10.jpg&w=930&h=350&zc=1",
                   "https://vignette.wikia.nocookie.net/gamelore/images/d/d6/Griselbrand_avatar.jpg/revision/latest?cb=20140106194506"]
-    url = gbear_urls[random.randint(0,4)]
+    url = gbear_urls[random.choice()]
     gbear_quotes = [" I’ll take my coat back now, asshole.", " Hey, you wanna be a farmer? Here’s a couple of achers!",
                     " Don’t let your mouth get your ass in trouble.", " Donuts don’t wear alligator shoes.",
                     " Imagine the future, Chains, ’cause you’re not in it.", " How do you like ya ribs?",
@@ -25,7 +25,7 @@ def griselbrand(message):
                     " I have come here to chew bubblegum and kick ass… And I’m all out of bubblegum.",
                     " Do you feel lucky, punk?", " If it bleeds, we can kill it.", " Consider that a divorce!",
                     " Yippee ki yay, motherfucker!"]
-    quote = gbear_quotes[random.randint(0,19)]
+    quote = gbear_quotes[random.choice()]
     message.reply(url + quote)
 
 
@@ -59,7 +59,7 @@ def magicball(message):
                "Reply hazy, try again",
                "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.",
                "Don't count on it.", "No.", "My sources say no", "Outlook not so good.", "Very doubtful."]
-    answer = answers[random.randint(0, len(answers))-1]
+    answer = answers[random.choice()]
     message.reply(answer)
 
 
