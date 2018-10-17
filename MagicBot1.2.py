@@ -37,13 +37,13 @@ def joecoolfacts(message):
     message.reply(quote)
 
 
-@respond_to('JEO', re.IGNORECASE)
+@respond_to('Jeo' or 'Jeopardy', re.IGNORECASE)
 def thegame(message):
     with open('j.json') as data_file:
         data = json.loads(data_file.read())
-    randomint = random.randint(0, 216929)
-    category, value, question, answer = (data[randomint]["category"]), (data[randomint]["value"]),\
-                                        (data[randomint]["question"]), (data[randomint]["answer"])
+    randomdata = random.choice(data)
+    category, value, question, answer = (randomdata["category"]), (randomdata["value"]), \
+                                        (randomdata["question"]), (randomdata["answer"])
     message.reply(category, value, question)
     sleep(15)
     message.reply(answer)
