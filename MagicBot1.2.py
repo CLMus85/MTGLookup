@@ -44,10 +44,7 @@ def thegame(message):
     randomint = random.randint(0, 216929)
     category, value, question, answer = (data[randomint]["category"]), (data[randomint]["value"]),\
                                         (data[randomint]["question"]), (data[randomint]["answer"])
-    message.reply(category)
-    message.reply(value)
-    sleep(2)
-    message.reply(question)
+    message.reply(category, value, question)
     sleep(15)
     message.reply(answer)
 
@@ -93,10 +90,11 @@ def giveme(message, cardname):
 
 @respond_to('commands', re.IGNORECASE)
 def help(message):
-    help_message = ("MagicBot responds to different arguments all following the prefix @magic-bot" '\n' "give me card\tPrints out data of requested magic card" 
-                    '\n' "gbear\t\t\t\tPay 7 to win, what more could you ask?" '\n' "jeo     \t\t\t\tProduces a random Jeopardy question with time delay of answer" 
-                    '\n' "meb   \t\t\t\tMagicEightBall" '\n' "trump\t\t\t\tProduces a random Trump quote" '\n'
-                     "jcf      \t\t\t\tRandom JoeCoolFacts quote")
+    help_message = ("MagicBot responds to different arguments all following the prefix @magic-bot" '\n' "give me card" '\n\t' 
+                    "Prints out data of requested magic card" 
+                    '\n' "gbear" '\n\t' "aka gg" '\n' "jeo" '\n\t' "Random Jeopardy question answer delay" 
+                    '\n' "meb" '\n\t' "MagicEightBall" '\n' "trump" '\n\t' "Random Trump quote" '\n'
+                     "jcf" '\n\t' "Random JoeCoolFacts quote")
     message.reply(help_message)
 
 
