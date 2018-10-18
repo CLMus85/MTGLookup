@@ -1,11 +1,13 @@
-# Version 1.4 - Added a JoeCoolFacts quote generator, a Griselbrand tribute, and a commands list
-#!/usr/bin/env python3
+# Version 1.5 - Commented the functions for clarity, add/modified magic 8 ball entries
+# !/usr/bin/env python3
+# coding: utf8
 import re, random, json
 from slackbot.bot import Bot, respond_to
 from requests import get
 from time import sleep
 
 
+# Generates a url image of Griselbrand coupled with a random quote from various 80's action movies.
 @respond_to('gbear' or 'gbears', re.IGNORECASE)
 def griselbrand(message):
     gbear_urls = ["https://img.scryfall.com/cards/large/en/mm3/72.jpg?1523883086",
@@ -13,7 +15,7 @@ def griselbrand(message):
                   "https://cdnb.artstation.com/p/assets/images/images/008/979/889/large/tomas-vareika-griselbrand-comp.jpg?1516447685",
                   "http://www.mtgcanada.com/wp-content/themes/jubini/framework/modules/timthumb/timthumb.php?src=http%3A%2F%2Fwww.mtgcanada.com%2Fwp-content%2Fuploads%2F2015%2F09%2Findex10.jpg&w=930&h=350&zc=1",
                   "https://vignette.wikia.nocookie.net/gamelore/images/d/d6/Griselbrand_avatar.jpg/revision/latest?cb=20140106194506"]
-    url = gbear_urls[random.choice(gbear_urls)]
+    url = random.choice(gbear_urls)
     gbear_quotes = [" I’ll take my coat back now, asshole.", " Hey, you wanna be a farmer? Here’s a couple of achers!",
                     " Don’t let your mouth get your ass in trouble.", " Donuts don’t wear alligator shoes.",
                     " Imagine the future, Chains, ’cause you’re not in it.", " How do you like ya ribs?",
@@ -29,6 +31,7 @@ def griselbrand(message):
     message.reply(url + quote)
 
 
+# MTG related JoeCoolFacts quote generator
 @respond_to('JCF', re.IGNORECASE)
 def joecoolfacts(message):
     url = "https://random-spark.000webhostapp.com/joecoolfacts.php"
@@ -37,6 +40,7 @@ def joecoolfacts(message):
     message.reply(quote)
 
 
+# Jeopardy json file can be found at https://drive.google.com/file/d/0BwT5wj_P7BKXb2hfM3d2RHU1ckE/view
 @respond_to('Jeo' or 'Jeopardy', re.IGNORECASE)
 def thegame(message):
     with open('j.json') as data_file:
@@ -49,17 +53,20 @@ def thegame(message):
     message.reply(answer)
 
 
+# Magic 8 Ball, answers to be modified for greater comic effect later.
 @respond_to('MEB', re.IGNORECASE)
 def magicball(message):
-    answers = ["It is certain.", "It is decidedly so.", "Without a doubt.", "Yes - definitely.", "You can count on it.",
-               "As I see it, yes.", "Most likely.", "Outlook good.", "Yes", "Signs point to yes.",
-               "Reply hazy, try again",
-               "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.",
-               "Don't count on it.", "No.", "My sources say no", "Outlook not so good.", "Very doubtful."]
+    answers = ["It is certain.", "I foresee it", "Without a doubt.", "Yes - definitely.", "You can count on it.",
+               "As I see it, yes.", "Most likely.", "Outlook good.", "Yes", "Reply hazy, try again",
+               "Ask again later.", "( ͡° ͜ʖ ͡°)", "Cannot predict now, but for tree-fiddy, I'll make an exception",
+               "¯\_(ツ)_/¯", "Don't count on it.", "No.", "My sources say no",
+               "Outlook not so good.", "Very doubtful." "If I told you no, would you believe it?", "Ahahahahahahahah...No.",
+               "Truer words have never been spoken" "All signs point to yes",
+               "You ask a lot of questions. I'm not God, I'm just a Magic8Ball, figure it out"]
     answer = random.choice(answers)
     message.reply(answer)
 
-
+# Generates a randomized Trump quote from a free and public api
 @respond_to('TRUMP', re.IGNORECASE)
 def trump_quote(message):
     url = "https://api.whatdoestrumpthink.com/api/v1/quotes/random"
@@ -69,6 +76,7 @@ def trump_quote(message):
     message.reply(response)
 
 
+# Generates a specified set of key: value entries for any magic card specified - give me {magic card}
 @respond_to('Give me (.*)', re.IGNORECASE)
 def giveme(message, cardname):
     cardname = cardname.replace(" ", '-')
@@ -79,16 +87,17 @@ def giveme(message, cardname):
     attributes = ['name', 'manaCost', 'type', 'rarity', 'set', 'setName', 'text', 'artist', 'imageUrl', 'multiverseid',
                   'rulings', 'printings', 'originalText', 'legalities']
     card_text = []
-    try:
-        for i in attributes:
-            card_text.append(data[i])
+    # [(key + " : " + '{}'.format(data[key])) for key in data.keys() if key in attributes] list comp to be implemented
+    # We don't want every dictionary key, so we compare lists and output to a desired format
+    for key in data.keys():
+        if key in attributes:
+            card_text.append(key + " : " + '{}'.format(data[key]))
             card_join = '\n'.join(str(e) for e in card_text)
-        message.reply('{}'.format(card_join))
-    except KeyError:
-        raise
+    message.reply('{}'.format(card_join))
 
 
-@respond_to('commands', re.IGNORECASE)
+# Slackbot automatically displays valid chat commands when an error is created. This is another way to call that info.
+@respond_to('commands' or 'command', re.IGNORECASE)
 def help(message):
     help_message = ("MagicBot responds to different arguments all following the prefix @magic-bot" '\n' "give me card" '\n\t' 
                     "Prints out data of requested magic card" 
@@ -96,7 +105,6 @@ def help(message):
                     '\n' "meb" '\n\t' "MagicEightBall" '\n' "trump" '\n\t' "Random Trump quote" '\n'
                      "jcf" '\n\t' "Random JoeCoolFacts quote")
     message.reply(help_message)
-
 
 
 def main():
