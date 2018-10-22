@@ -11,6 +11,7 @@ from requests import get
 from time import sleep
 from bs4 import BeautifulSoup
 
+
 # Generates a URL to the first Google entry for a search item.
 @respond_to('google (.*)')
 def google(message, searchterms):
@@ -131,3 +132,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
