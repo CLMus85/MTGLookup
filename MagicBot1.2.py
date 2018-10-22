@@ -1,27 +1,25 @@
-# Version 1.7 pending
-"""""direct_reply produces message in APPS magic-bot section.
-     private_reply implementation attempt
-     direct_reply /// private_reply reply in APP channel. ?Identical functions?
-     Changed - to _ in mtglookup to match APIs and changed a few variable names for clarity."""""
-#######################
+# - Version 1.6 -
+# Changed - to _ in mtglookup to match the APIs url format
+# Fixed consistency issues with ifeellucky by redefining the method for obtaining the url
+# Changed variable and function names for clarity and simplicity as well as updating help function
 
 # !/usr/bin/env python3
 # coding: utf8
 import re, random, json
 from slackbot.bot import Bot, respond_to
-from slackbot.dispatcher import unicode_compact
 from requests import get
 from time import sleep
+from bs4 import BeautifulSoup
 
 # Generates a URL to the first Google entry for a search item.
-@respond_to('ifeellucky (.*)')
-def ifeellucky(message, searchterms):
-    ifl_url = "http://www.google.com/search?hl=en&q=" + searchterms + "&btnI=I"
-    ping = get(ifl_url)
-    if ping.url == ifl_url:
-        message.reply(ping.url + " error: type unknown")
-    else:
-        message.reply(ping.url)
+@respond_to('google (.*)')
+def google(message, searchterms):
+    url = "http://www.google.com/search?hl=en&q=" + searchterms
+    htmlresponse = get(url)
+    soup = BeautifulSoup(htmlresponse.text, "html.parser")
+    linksoup = soup.select('.r a')
+    firstlink = (linksoup[0].get('href'))
+    message.reply(firstlink.replace('/url?q=', ' '))
 
 
 # Generates a url image of Griselbrand coupled with a random quote from various 80's action movies.
@@ -89,7 +87,7 @@ def trump(message):
     data = get(url)
     data = data.json()
     response = (data["message"])
-    message.reply_webapi(response)
+    message.reply(response)
 
 
 # Generates and responds with a set of key: value entries for any magic card specified - ! give me {magic card} in chat
@@ -114,14 +112,15 @@ def mtglookup(message, cardname):
 
 
 # Slackbot automatically displays valid chat commands when an error is created. This is another way to call that info.
-@respond_to('commands' or 'command', re.IGNORECASE)
-def help(message):
+@respond_to('help' or 'helpme', re.IGNORECASE)
+def bothelp(message):
     help_message = ("MagicBot responds to different arguments all following the prefix @magic-bot or simply !" 
                     '\n' "give me {card}" '\n\t*' 
-                    "-Prints out data of the requested magic card-" 
-                    '\n' "gbear" '\n\t*' "-aka gg-" '\n' "jeo" '\n\t*' "-Random Jeopardy question with answer delay-" 
-                    '\n' "meb" '\n\t*' "-MagicEightBall-" '\n' "trump" '\n\t*' "-Random Trump quote-" '\n'
-                     "jcf" '\n\t*' "-Random JoeCoolFacts quote-")
+                    "Prints out data of the requested magic card" 
+                    '\n' "gbear" '\n\t*' "aka gg" '\n' "jeo" '\n\t*' "Random Jeopardy question with answer delay" 
+                    '\n' "meb {question}" '\n\t*' "MagicEightBall" '\n' "trump" '\n\t*' "Random Trump quote" '\n'
+                     "jcf" '\n\t*' "Random JoeCoolFacts quote" '\n' "google {search terms}" '\n\t*' "Returns the "
+                    "first entry of a google search")
     message.reply(help_message)
 
 
