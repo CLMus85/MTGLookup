@@ -15,8 +15,7 @@ from bs4 import BeautifulSoup
 # Generates a URL to the first Google entry for a search item.
 @respond_to('google (.*)')
 def google(message, searchterms):
-    url = "http://www.google.com/search?hl=en&q=" + searchterms
-    htmlresponse = get(url)
+    htmlresponse = get("http://www.google.com/search?hl=en&q=" + searchterms)
     soup = BeautifulSoup(htmlresponse.text, "html.parser")
     linksoup = soup.select('.r a')
     firstlink = (linksoup[0].get('href'))
@@ -42,16 +41,14 @@ def griselbrand(message):
                     " I have come here to chew bubblegum and kick ass… And I’m all out of bubblegum.",
                     " Do you feel lucky, punk?", " If it bleeds, we can kill it.", " Consider that a divorce!",
                     " Yippee ki yay, motherfucker!"]
-    quote = random.choice(gbear_quotes)
-    message.reply(url + quote)
+    message.reply(url + random.choice(gbear_quotes))
 
 
 # MTG related JoeCoolFacts quote generator
 @respond_to('JCF', re.IGNORECASE)
 def joecoolfacts(message):
     url = "https://random-spark.000webhostapp.com/joecoolfacts.php"
-    quote = get(url).text
-    message.reply(quote)
+    message.reply(get(url).text)
 
 
 # Jeopardy json file can be found at https://drive.google.com/file/d/0BwT5wj_P7BKXb2hfM3d2RHU1ckE/view
@@ -78,8 +75,7 @@ def magicball(message):
                "Outlook not so good.", "Very doubtful." "If I told you no, would you believe it?", "Ahahahahahahahah...No.",
                "Truer words have never been spoken", "All signs point to yes", "bruh. totally",
                "I like turtles."]
-    answer = random.choice(answers)
-    message.reply(answer)
+    message.reply(randon.choice(answers))
 
 # Generates a randomized Trump quote from a free and public api
 @respond_to('TRUMP', re.IGNORECASE)
