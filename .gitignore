@@ -38,3 +38,7 @@ Thumbs.db
 
 .idea/
 venv/
+__init__.py
+input/
+setup.py
+slackbot_settings.py
