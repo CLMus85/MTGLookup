@@ -1,12 +1,6 @@
-# - Version 1.8 -
-# Removed bs4 for googlesearch
-# Added description - slackbot.bot found at https://github.com/lins05/slackbot
-# Trimmed the import statements and concatenated redundancies
-# Changed reply to send so user will not be spammed with @user
-# List variables declared outside of function
-
 # !/usr/bin/env python3
 # coding: utf8
+
 import json
 from re import IGNORECASE
 from slackbot.bot import Bot, respond_to
@@ -19,11 +13,17 @@ from googlesearch import search
 # Generates a URL to the first Google entry for a search item.
 @respond_to('google (.*)')
 def google(message, searchterms):
-    query = searchterms
     list = []
-    for i in search(query, tld='com', lang='en', num=1, start=0, stop=1, pause=0.15):
+    for i in search(searchterms, tld='com', lang='en', num=1, start=0, stop=1, pause=0.15):
         list.append[i]
     message.send(list)
+
+
+def strike(text):
+    """
+    Creates a strikeout through a text
+    """
+    return ''.join([u'\u0336{}'.format(c) for c in text])
 
 
 gbear_urls, gbear_quotes = (["https://img.scryfall.com/cards/large/en/mm3/72.jpg?1523883086",
@@ -72,11 +72,12 @@ def jeo(message):
 
 
 answers = ["It is certain.", "I foresee it", "Without a doubt.", "Yes - definitely.", "You can count on it.",
-           "As I see it, yes.", "Most likely.", "Outlook good.", "Yes", "Reply hazy, try again",
-           "Ask again later.", "Cannot predict now, but for tree-fiddy, I'll make an exception",
-           "¯\_(ツ)_/¯", "Don't count on it.", "No.", "My sources say no",
+           "As I see it, yes.", "Outlook good.", "Yes", "How Can Mirrors Be Real If Our Eyes Aren't Real",
+           "Ask again later.", "I'm gonna need about tree-fiddy to answer that",
+           "No. ( ͡° ͜ʖ ͡°) Yes. ( ͡☉ ͜ʖ ͡☉) Maybe. (ง ° ͜ ʖ °)ง", "Don't count on it.",
+           strike('ur nan').join("My sources say no"),
            "Outlook not so good.", "Very doubtful." "If I told you no, would you believe it?",
-           "Ahahahahahahahah...No.", "Truer words have never been spoken", "All signs point to yes", "bruh. totally",
+           "Ahahahahahahahah...No.", "Does Doug Durdle?", "All signs point to yes", "Bruh.",
            "I like turtles."]
 
 
@@ -92,23 +93,15 @@ def trump(message):
     message.send((get("https://api.whatdoestrumpthink.com/api/v1/quotes/random").json())["message"])
 
 
-attributes = ['name', 'manaCost', 'type', 'rarity', 'set', 'setName', 'text', 'artist', 'imageUrl', 'multiverseid',
-              'rulings', 'printings', 'originalText', 'legalities']
-
-
 # Generates and responds with a set of key: value entries for any magic card specified - ! give me {magic card} in chat
-@respond_to('Give me (.*)', IGNORECASE)
+@respond_to('Give me (.*)' or '! (.*)', IGNORECASE)
 def mtglookup(message, cardname):
     # str.replace(old, new, [, count])
+    global attributes
+    attributes = ['name', 'manaCost', 'type', 'rarity', 'set', 'setName', 'text', 'artist', 'imageUrl', 'multiverseid',
+                  'rulings', 'printings', 'originalText', 'legalities']
     data = ((get("https://api.magicthegathering.io/v1/cards/?name=" + cardname.replace(" ", '_'))).json()['cards'][1])
-    card_text = []
-    # We don't want every dictionary key, and not all attributes apply in every case
-    # so we compare lists and output to a desired format
-    for key in data.keys():
-        if key in attributes:
-            card_text.append(key + "   *   " + '{}'.format(data[key]))
-            card_join = '\n'.join(str(e) for e in card_text)
-    message.send('{}'.format(card_join))
+    message.send('{}'.format(transform_dict(flatten_nested_dict(data))))
 
 
 help_message = ("MagicBot responds to different arguments all following the prefix @magic-bot or simply !" 
@@ -131,7 +124,32 @@ def main():
     bot.run()
 
 
+def flatten_nested_dict(data):
+    """
+    Flatten nested dicts
+    """
+    for item in list(data):
+        if type(item) is dict:
+            for key in item:
+                data[key] = item[key]
+    return data
+
+
+def transform_dict(data):
+    """
+    Transform dict structure to a specific format
+    """
+    item_text = []
+    try:
+        for key in data:
+            if key in attributes:
+                item_text.append(key + (" " * (16-len(key))) + '{}'.format(data[key]))
+                item_join = ('\n'.join(str(e) for e in item_text))
+    except NameError:
+        print(NameError, "whoops")
+    finally:
+        return item_join
+
+
 if __name__ == "__main__":
     main()
-
-
